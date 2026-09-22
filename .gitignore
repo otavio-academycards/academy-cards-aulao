@@ -1,0 +1,18 @@
+# Sistema operacional
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Python (tools/build-assets.py)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editores
+.vscode/
+.idea/
+
+# Segredos, caso algum dia existam
+.env
+.env.*

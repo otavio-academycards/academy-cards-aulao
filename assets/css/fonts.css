@@ -1,0 +1,11 @@
+/* Fontes self-hosted. Gerado por tools/build-assets.py - nao editar a mao. */
+/* Nunito: fonte oficial da Academy Cards (manual de marca), unica da pagina. */
+/* Variable font; um arquivo cobre todos os pesos.                            */
+
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../fonts/nunito.woff2') format('woff2');
+}
