@@ -46,6 +46,7 @@ TEAL = (24, 67, 74)
 BONE = (227, 227, 222)
 BLUE = (63, 191, 255)
 ROSE = (203, 165, 147)
+AMBER = (255, 232, 109)
 
 # --- Fontes -----------------------------------------------------------------
 
@@ -240,6 +241,37 @@ def build_wordmark() -> Image.Image:
     return r
 
 
+def build_academy_bone_png() -> Image.Image:
+    """
+    Versao bone da logo horizontal da Academy, em PNG com alpha.
+
+    Existe porque nem toda superficie aceita SVG: o Outlook nao renderiza SVG
+    nem WebP, e o Pillow (que desenha a imagem OG) tambem nao. O recorte navy
+    vira bone e os flashcards coloridos ficam como estao.
+    """
+    print("[logo] Academy Cards em bone (PNG, para OG e e-mail)")
+    src = SRC_ACADEMY / "logo-provasocial.png"
+    im = Image.open(src).convert("RGBA")
+    im = im.crop(im.getbbox())
+
+    px = im.load()
+    trocados = 0
+    for y in range(im.height):
+        for x in range(im.width):
+            r, g, b, a = px[x, y]
+            if a == 0:
+                continue
+            # pixels escuros = traco do logo; coloridos = flashcards, preservar
+            if max(r, g, b) < 90:
+                px[x, y] = (*BONE, a)
+                trocados += 1
+    dest = OUT_IMG / "academy-bone.png"
+    im.save(dest, "PNG", optimize=True)
+    log(f"{dest.name}  {im.width}x{im.height}  {dest.stat().st_size/1024:.1f} KB"
+        f"  ({trocados} px recoloridos)")
+    return im
+
+
 def build_academy_svgs() -> None:
     """Recolore o unico asset realmente vetorial da Academy. Originais intactos."""
     print("[logo] Academy Cards (SVG vetorial)")
@@ -336,17 +368,26 @@ def hero_backdrop(w: int, h: int) -> Image.Image:
     return Image.composite(Image.new("RGB", (w, h), TEAL), bg, bloom)
 
 
-def build_og_image(hero: Image.Image, wordmark: Image.Image) -> None:
-    """Card 1200x630 para compartilhamento no Instagram / WhatsApp."""
+def build_og_image(hero: Image.Image, wordmark: Image.Image,
+                   academy: Image.Image) -> None:
+    """
+    Card 1200x630 para compartilhamento no Instagram / WhatsApp.
+
+    Desenhado em 2x e reduzido no final. O Pillow nao faz antialiasing em
+    contorno de forma, entao as bordas dos chips sairiam serrilhadas se o
+    desenho fosse direto no tamanho final. A foto recortada tem 1290px de
+    altura, entao a 2x (1260) ela ainda e reduzida, nunca ampliada.
+    """
     print("[og] imagem de compartilhamento 1200x630")
-    W, H = 1200, 630
+    S = 2
+    W, H = 1200 * S, 630 * S
     card = hero_backdrop(W, H).convert("RGBA")
 
     # Pauta de folha de redacao, o mesmo motivo do hero
     rule = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     rd = ImageDraw.Draw(rule)
-    for y in range(64, H, 46):
-        rd.line((56, y, W - 56, y), fill=BONE + (16,), width=1)
+    for y in range(64 * S, H, 46 * S):
+        rd.line((56 * S, y, W - 56 * S, y), fill=BONE + (16,), width=S)
     card.alpha_composite(rule)
 
     # Foto a direita, com fade na borda esquerda para fundir com o fundo
@@ -355,60 +396,116 @@ def build_og_image(hero: Image.Image, wordmark: Image.Image) -> None:
     photo = hero.resize((pw, ph), Image.LANCZOS).convert("RGBA")
     mask = Image.new("L", (pw, ph), 255)
     md = ImageDraw.Draw(mask)
-    for i in range(round(pw * 0.42)):
-        md.line((i, 0, i, ph), fill=int(255 * (i / (pw * 0.42)) ** 1.5))
+    largura_fade = round(pw * 0.42)
+    for i in range(largura_fade):
+        md.line((i, 0, i, ph), fill=int(255 * (i / largura_fade) ** 1.5))
     photo.putalpha(mask)
-    card.alpha_composite(photo, (W - pw + 40, 0))
+    card.alpha_composite(photo, (W - pw + 40 * S, 0))
 
     d = ImageDraw.Draw(card)
 
     _ttf_cache: dict[tuple[str, int], io.BytesIO | None] = {}
-    _QUERY = {"nunito": "family=Nunito:{w}"}
 
-    def font(slug: str, size: int, weight: int = 400):
-        key = (slug, weight)
+    def font(size: int, weight: int = 400):
+        key = ("nunito", weight)
         if key not in _ttf_cache:
-            _ttf_cache[key] = fetch_ttf(_QUERY[slug].format(w=weight))
+            _ttf_cache[key] = fetch_ttf(f"family=Nunito:{weight}")
         stream = _ttf_cache[key]
         if stream is None:
             return ImageFont.load_default()
         stream.seek(0)
-        return ImageFont.truetype(stream, size)
+        return ImageFont.truetype(stream, size * S)
+
+    def pill(x, y, h, texto, f, fg, bg=None, borda=None, pad=18):
+        """
+        Pilula no mesmo desenho da landing page. Devolve a largura ocupada.
+
+        O raio e exatamente h/2. Passar um raio enorme (999, como no CSS) faz o
+        Pillow desenhar arcos maiores que a forma: o resultado vira uma elipse
+        de pontas afiladas, nao uma pilula.
+        """
+        x, y, h, pad = x * S, y * S, h * S, pad * S
+        tw = d.textlength(texto, font=f)
+        w = tw + pad * 2
+        d.rounded_rectangle((x, y, x + w, y + h), radius=h // 2,
+                            fill=bg, outline=borda, width=2 * S if borda else 0)
+        d.text((x + pad, y + h / 2), texto, font=f, fill=fg, anchor="lm")
+        return w / S
 
     x = 64
-    # tag
-    f_tag = font("nunito", 23, 800)
-    tag = "AULÃO ON-LINE E GRATUITO"
-    tw = d.textlength(tag, font=f_tag)
-    d.rounded_rectangle((x, 66, x + tw + 48, 66 + 46), radius=999, fill=BLUE + (255,))
-    d.text((x + 24, 66 + 23), tag, font=f_tag, fill=NAVY + (255,), anchor="lm")
 
-    # titulo em Nunito 800, tracking fechado - mesma voz do H1 da pagina
-    f_h1 = font("nunito", 58, 800)
-    y = 178
-    for line in ("Nova Cartilha do ENEM:", "o que muda na sua redação?"):
-        d.text((x, y), line, font=f_h1, fill=BONE + (255,))
-        y += 74
+    # --- tag ---------------------------------------------------------------
+    pill(x, 62, 48, "AULÃO ON-LINE E GRATUITO", font(22, 800),
+         NAVY + (255,), bg=BLUE + (255,), pad=22)
 
-    # meta
-    d.text((x, y + 30), "08/10   •   20h   •   On-line   •   Gratuito",
-           font=font("nunito", 28, 700), fill=BLUE + (255,))
+    # --- titulo ------------------------------------------------------------
+    f_h1 = font(58, 800)
+    y = 152
+    for linha in ("Nova Cartilha do ENEM:", "o que muda na sua redação?"):
+        d.text((x * S, y * S), linha, font=f_h1, fill=BONE + (255,))
+        y += 72
 
-    # assinatura da parceria, alinhada pela base
-    base = H - 58
-    wm_w = 232
-    wm = wordmark.resize((wm_w, round(wordmark.height * wm_w / wordmark.width)),
-                         Image.LANCZOS)
-    card.alpha_composite(wm, (x, base - wm.height))
-    d = ImageDraw.Draw(card)
-    rx = x + wm_w + 30
-    d.line((rx, base - wm.height + 6, rx, base), fill=ROSE + (190,), width=2)
-    d.text((rx + 26, base - wm.height // 2), "Academy Cards",
-           font=font("nunito", 27, 800), fill=BONE + (255,), anchor="lm")
+    # --- chips de data, no lugar da linha de bullets -----------------------
+    f_chip = font(21, 700)
+    cx, cy, ch = x, y + 34, 46
+    borda, fundo = BONE + (58,), NAVY + (150,)
+    for texto in ("08 de outubro", "20h", "On-line"):
+        cx += pill(cx, cy, ch, texto, f_chip, BONE + (255,),
+                   bg=fundo, borda=borda) + 10
+    pill(cx, cy, ch, "Gratuito", f_chip, AMBER + (255,),
+         bg=fundo, borda=AMBER + (120,))
 
+    # --- assinatura da parceria --------------------------------------------
+    # Mesma proporcao do lockup do header da pagina. Do CSS, na medida maxima:
+    #   .lockup__taci     168px      .lockup__academy  208px
+    #   .lockup           gap 20px   .lockup__rule     1px, altura do wordmark
+    # Aqui tudo e escalado por um fator unico, entao a relacao entre as duas
+    # marcas na imagem OG e identica a do site.
+    HDR_TACI, HDR_ACADEMY, HDR_GAP = 168, 208, 20
+
+    wm_w = 224
+    k = wm_w / HDR_TACI
+    ac_w = round(HDR_ACADEMY * k)
+    gap = round(HDR_GAP * k)
+
+    def por_largura(img, larg):
+        return img.resize((larg * S, round(img.height * larg * S / img.width)),
+                          Image.LANCZOS)
+
+    wm = por_largura(wordmark, wm_w)
+    ac = por_largura(academy, ac_w)
+
+    base = (H // S) - 58
+    topo = base * S - wm.height
+    centro = topo + wm.height // 2
+    card.alpha_composite(wm, (x * S, topo))
+
+    # Filete com o mesmo gradiente do CSS: transparente -> rose (22%..78%) ->
+    # transparente, ocupando a altura do wordmark, como o align-self: stretch.
+    rule_w = max(2, round(1 * k)) * S
+    filete = Image.new("RGBA", (rule_w, wm.height), ROSE + (0,))
+    fp = filete.load()
+    for yy in range(wm.height):
+        t = yy / (wm.height - 1)
+        a = 0 if t < 0.10 else (255 if 0.22 <= t <= 0.78 else
+                                int(255 * min(1, (t - 0.10) / 0.12 if t < 0.5
+                                              else (0.90 - t) / 0.12)))
+        for xx in range(rule_w):
+            fp[xx, yy] = ROSE + (max(0, min(255, a)),)
+    card.alpha_composite(filete, (x * S + wm.width + gap * S, topo))
+
+    card.alpha_composite(
+        ac, (x * S + wm.width + gap * S + rule_w + gap * S, centro - ac.height // 2)
+    )
+
+    direita = (x * S + wm.width + gap * S + rule_w + gap * S + ac.width) / S
+    log(f"lockup na proporcao do header: Taci {wm.width//S}x{wm.height//S}, "
+        f"Academy {ac.width//S}x{ac.height//S}, gap {gap}, termina em x={direita:.0f}")
+
+    final = card.convert("RGB").resize((1200, 630), Image.LANCZOS)
     dest = OUT_IMG / "og-image.jpg"
-    card.convert("RGB").save(dest, "JPEG", quality=86, optimize=True, subsampling=1)
-    log(f"{dest.name}  {W}x{H}  {dest.stat().st_size/1024:.1f} KB")
+    final.save(dest, "JPEG", quality=88, optimize=True, subsampling=1)
+    log(f"{dest.name}  1200x630  {dest.stat().st_size/1024:.1f} KB  (render 2x)")
 
 
 # --- Integridade dos originais ----------------------------------------------
@@ -436,8 +533,9 @@ def main() -> int:
     hero = build_hero()
     wordmark = build_wordmark()
     build_academy_svgs()
+    academy = build_academy_bone_png()
     build_raster_favicons()
-    build_og_image(hero, wordmark)
+    build_og_image(hero, wordmark, academy)
 
     after = snapshot_sources()
     print()

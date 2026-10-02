@@ -6,6 +6,17 @@
 <title>Aulão gratuito: Nova Cartilha do ENEM | Profa. Taci × Academy Cards</title>
 <meta name="description" content="Aulão on-line e gratuito em 08/10, às 20h. A Profa. Taci analisa a nova Cartilha do Participante do ENEM: o que mudou, o que continua igual e o que o INEP tornou mais explícito nas Competências 2 e 3.">
 <meta name="robots" content="index, follow">
+
+<!-- Google Tag Manager (mesmo container da LP principal) -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5WTS9N2S');
+</script>
+<!-- End Google Tag Manager -->
+
 <link rel="canonical" href="https://aulao.academycards.com.br/">
 
 <meta property="og:type" content="website">
@@ -61,6 +72,11 @@
 </head>
 
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5WTS9N2S"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 <div class="backdrop" aria-hidden="true"></div>
 
 <!-- Lockup da parceria. Não é navegação: a página tem uma única conversão. -->
@@ -132,10 +148,12 @@
 
       <!-- ==================================================================
            Formulário
-           Markup próprio, POST nativo para o mesmo endpoint do Zoho.
-           Os tokens ocultos são os do snippet original e não devem ser
-           alterados. Funciona sem JavaScript: sem JS perdem-se apenas a
-           máscara, a validação inline e a captura de UTM.
+           Markup próprio, POST nativo para o Webform de Conversões do Zoho
+           "Aulao Taci 08-10 - Conversoes" (7253906000002963033), no mesmo
+           padrão da LP (lp.academycards.com.br). Os tokens ocultos são os do
+           HTML gerado pelo Zoho para esse Webform e não devem ser alterados.
+           Precisa de JavaScript: o Name, a Data/Hora e o ID da submissão
+           são gerados por main.js no envio (campos obrigatórios do Webform).
            =================================================================== -->
       <div class="card rise" id="inscricao" style="animation-delay:.5s">
         <h2 class="card__title">Garanta sua vaga</h2>
@@ -145,37 +163,49 @@
         </p>
 
         <form class="form" id="formInscricao" method="POST"
-              action="https://crm.zoho.com/crm/WebToContactForm"
+              action="https://crm.zoho.com/crm/WebForm"
               accept-charset="UTF-8" novalidate>
 
-          <!-- Tokens do Zoho, copiados verbatim do snippet. Não alterar. -->
-          <input type="hidden" name="xnQsjsdp" value="2d9815247bb098835e28e1ea8de4390dea136a2e7ad66e5777d169a72e189f5f">
-          <input type="hidden" name="xmIwtLD" value="2a23e5d55b14a779d5c4b73e2a89005316a0b6adc07a369478cf2a3686a0001cc840ef4f9965e54cbdcb5846c3566625">
-          <input type="hidden" name="actionType" value="Q29udGFjdHM=">
+          <!-- Tokens do Webform de Conversões (HTML gerado pelo Zoho). Não alterar. -->
+          <input type="hidden" name="xnQsjsdp" value="b833844cea739bd3d26a31a8eaacaef8565503e9fad5eba96a791ac153aacfb9">
+          <input type="hidden" name="xmIwtLD" value="526959bc41a19037a30b53f416122ae24413be55bc148d625228cb2e58dde2cbce71c604ae0ceef12cfc91d0570cbf34">
+          <input type="hidden" name="actionType" value="Q3VzdG9tTW9kdWxlMg==">
           <input type="hidden" name="returnURL" value="https://aulao.academycards.com.br/obrigado">
           <input type="hidden" name="zc_gad" id="zc_gad" value="">
 
-          <!-- Classificação no CRM -->
-          <input type="hidden" name="CONTACTCF12" value="Aulão de redação - Taci">
-          <input type="hidden" name="CONTACTCF16" value="Acesso Grátis">
-          <input type="hidden" name="CONTACTCF10" id="paginaOrigem" value="Aulão Nova Cartilha do ENEM">
+          <!-- Classificação no CRM (Conversões). O Webform também aplica estes
+               valores fixos no servidor. -->
+          <input type="hidden" name="COBJ2CF112" value="7253906000002815025"><!-- Ativo_de_Conversao = Aulão de Redação — Taci -->
+          <input type="hidden" name="COBJ2CF18" value="Pendente"><!-- Status_do_Processamento -->
+          <input type="hidden" name="COBJ2CF17" value="Zoho Webform"><!-- Origem_Tecnica -->
+          <input type="hidden" name="COBJ2CF54" value="08/10/2026"><!-- Data_do_Evento (DD/MM/YYYY): usado pelos lembretes 02/10, 06/10... -->
+
+          <!-- Gerados por main.js no envio -->
+          <input type="hidden" id="convName" name="NAME" value="Aulão Taci"><!-- Name -->
+          <input type="hidden" id="dhData"   name="COBJ2CF51"       value=""><!-- Data_Hora_da_Conversao: DD/MM/YYYY -->
+          <input type="hidden" id="dhHora"   name="COBJ2CF51hour"   value=""><!-- 01..12 -->
+          <input type="hidden" id="dhMinuto" name="COBJ2CF51minute" value=""><!-- 00..59 -->
+          <input type="hidden" id="dhAmPm"   name="COBJ2CF51ampm"   value=""><!-- AM | PM -->
+          <input type="hidden" id="idExterno" name="COBJ2CF1" value=""><!-- ID_Externo_da_Submissao -->
+          <input type="hidden" id="paginaOrigem" name="COBJ2CF5" value="https://aulao.academycards.com.br/"><!-- Pagina_de_Origem -->
 
           <!-- Atribuição: preenchidos por JS a partir da query string -->
-          <input type="hidden" name="CONTACTCF7" id="utm_source" value="">
-          <input type="hidden" name="CONTACTCF8" id="utm_medium" value="">
-          <input type="hidden" name="CONTACTCF9" id="utm_campaign" value="">
-          <input type="hidden" name="CONTACTCF3" id="utm_content" value="">
-          <input type="hidden" name="CONTACTCF5" id="utm_term" value="">
-          <input type="hidden" name="CONTACTCF11" id="fbclid" value="">
-          <input type="hidden" name="CONTACTCF2" id="ttclid" value="">
-          <input type="hidden" name="CONTACTCF4" id="wbraid" value="">
-          <input type="hidden" name="CONTACTCF6" id="gbraid" value="">
+          <input type="hidden" name="COBJ2CF6" id="utm_source" value="">
+          <input type="hidden" name="COBJ2CF7" id="utm_medium" value="">
+          <input type="hidden" name="COBJ2CF8" id="utm_campaign" value="">
+          <input type="hidden" name="COBJ2CF9" id="utm_content" value="">
+          <input type="hidden" name="COBJ2CF10" id="utm_term" value="">
+          <input type="hidden" name="COBJ2CF11" id="fbclid" value="">
+          <input type="hidden" name="COBJ2CF12" id="gclid" value=""><!-- GCLID (além do zc_gad) -->
+          <input type="hidden" name="COBJ2CF13" id="gbraid" value="">
+          <input type="hidden" name="COBJ2CF14" id="wbraid" value="">
+          <input type="hidden" name="COBJ2CF15" id="ttclid" value="">
 
           <p class="form__alert" id="formAlert" role="alert"></p>
 
           <div class="field">
             <label class="field__label" for="Last_Name">Nome</label>
-            <input class="field__input" type="text" id="Last_Name" name="Last Name"
+            <input class="field__input" type="text" id="Last_Name" name="COBJ2CF2"
                    maxlength="80" autocomplete="name" enterkeyhint="next"
                    placeholder="Como podemos te chamar?"
                    aria-describedby="err-nome" required>
@@ -184,7 +214,7 @@
 
           <div class="field">
             <label class="field__label" for="Email">E-mail</label>
-            <input class="field__input" type="email" id="Email" name="Email"
+            <input class="field__input" type="email" id="Email" name="COBJ2CF3"
                    maxlength="100" autocomplete="email" inputmode="email"
                    enterkeyhint="next" spellcheck="false" autocapitalize="off"
                    placeholder="voce@email.com"
@@ -195,12 +225,19 @@
 
           <div class="field">
             <label class="field__label" for="Mobile">WhatsApp (com DDD)</label>
-            <input class="field__input" type="tel" id="Mobile" name="Mobile"
-                   maxlength="16" autocomplete="tel" inputmode="numeric"
+            <!-- Sem name: serve só à digitação. main.js envia o número
+                 normalizado nos ocultos COBJ2CF4 (Celular) e COBJ2CF22 (Telefone). -->
+            <input class="field__input" type="tel" id="Mobile"
+                   maxlength="30" autocomplete="tel" inputmode="numeric"
                    enterkeyhint="done" placeholder="(51) 99999-9999"
                    aria-describedby="err-fone" required>
             <p class="field__msg" id="err-fone"></p>
           </div>
+
+          <!-- Telefone para o Zoho: Telefone_Informado = +55/E.164 como informado;
+               Celular_Informado = WhatsApp ID (regra do nono dígito). Preenchidos no envio. -->
+          <input type="hidden" id="phoneOriginal" name="COBJ2CF22" value=""><!-- Telefone_Informado -->
+          <input type="hidden" id="mobileNormalizado" name="COBJ2CF4" value=""><!-- Celular_Informado -->
 
           <!-- Honeypot do Zoho: deve permanecer vazio. Nunca preencher via JS. -->
           <div class="hp" aria-hidden="true">
@@ -373,8 +410,8 @@
   </div>
 </footer>
 
-<!-- Analytics de formulário do Zoho, mantido verbatim do snippet original. -->
-<script id="wf_anal" defer src="https://crm.zohopublic.com/crm/WebFormAnalyticsServeServlet?rid=4736499fcdae2779583d38b93acecb35f5fbb273c7b3bb8b350fc7482456abec773f3a37f31ac1ae912dfc9e1ab47642gid779486dd3ba4871f18eef0da12e7cb05e36810faf4dd174bdda02a3f77d71781gid0bda2a11540f26da11e9a14d1bf9ab4be35f0c5229930ea06bc0c9cb6da41b46gid25ee4efa0359009193fdae49a536a07adceba82db6ccc0e3511c914c6a41ab7d&tw=51a1550e152132a9af5bb2eb44dcc4e7e20b845698d8f2e5753ecd642561d7cd&version=v2"></script>
+<!-- Analytics de formulário do Zoho: rid do Webform de Conversões 7253906000002963033. -->
+<script id="wf_anal" defer src="https://crm.zohopublic.com/crm/WebFormAnalyticsServeServlet?rid=aa58efc27c74a2224200ca5f4df2fc7fa3498c9c421cc9da2a1e8f3db16502f212c4336618dd22ac99c541e497c8bb42gidd527f06690f76934b0949c77e348fdc5f532ed4b52de3122bd156ae1672393a5gidc3797e5f0005b24e2614d29dda7a100c145ff3351baf2d11cc2372aa43b07d22gid0b613e10572bc63d9e9683ccc8c60f7901382b7b4d1fc23f7e86d0a2d12f6e0a&tw=ffebc0fdb24fc6688dc98cb5505e7105a425a5a5f2a5b1da877da494b59d8a60&version=v2"></script>
 
 <script src="assets/js/main.js" defer></script>
 </body>

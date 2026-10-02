@@ -28,8 +28,10 @@
     · Sem SVG e sem WebP: Outlook não renderiza nenhum dos dois. Por isso o
       lockup é tipografia, não imagem. Há um comentário abaixo mostrando onde
       trocar por um PNG hospedado, se quiser.
-    · Campo de mesclagem do Zoho CRM: ${Contacts.Last Name} - é para lá que o
-      formulário envia o nome. Se o contato não tiver nome, a saudação fica
+    · Campo de mesclagem do Zoho CRM: ${Conversoes.Last Name} (campo "Last Name"
+      de Conversões, API Nome_Informado) - é para lá que o formulário envia o nome.
+      Ao colar no Zoho, se o nome do módulo no campo de mesclagem for outro,
+      reinsira o campo pelo seletor "Inserir campo de mesclagem". Se o contato não tiver nome, a saudação fica
       truncada; por isso ela é "Olá, X!" em linha própria, e nenhuma frase
       depende do nome para fazer sentido.
   =============================================================================
@@ -132,7 +134,7 @@
         </h1>
 
         <p style="margin:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:16px; line-height:1.6; color:#A9B4B6;">
-          Olá, ${Contacts.Last Name}!<br />
+          Olá, ${Conversoes.Last Name}!<br />
           Você está inscrito no aulão <strong style="color:#E3E3DE; font-weight:700;">Nova Cartilha do ENEM: o que muda na sua redação?</strong>, com a Profa. Taciane Weber.
         </p>
       </td>

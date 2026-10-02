@@ -1,9 +1,11 @@
 /* =============================================================================
    Aulão "Nova Cartilha do ENEM" - Profa. Taci × Academy Cards
    -----------------------------------------------------------------------------
-   Progressive enhancement. O formulário é um POST nativo para o Zoho e funciona
-   sem este arquivo; aqui só acrescentamos máscara, validação inline e captura
-   de atribuição.
+   O formulário é um POST nativo para o Webform de Conversões do Zoho
+   (7253906000002963033), no mesmo padrão da LP. Este arquivo acrescenta
+   máscara, validação inline, captura de atribuição, a derivação de
+   Telefone/Celular e os campos gerados no envio (Name, Data/Hora da
+   Conversão e ID da submissão), obrigatórios no Webform.
 
    IMPORTANTE: validamos FORMATO e plausibilidade. Não temos como verificar se
    um e-mail ou um número existe de fato - e nenhum texto da página afirma isso.
@@ -27,6 +29,7 @@
     ["utm_content", "utm_content"],
     ["utm_term", "utm_term"],
     ["fbclid", "fbclid"],
+    ["gclid", "gclid"],
     ["ttclid", "ttclid"],
     ["wbraid", "wbraid"],
     ["gbraid", "gbraid"]
@@ -35,6 +38,10 @@
     var val = params.get(pair[1]);
     if (el && val) el.value = val.slice(0, 255);
   });
+
+  // gclid também no zc_gad, como antes (integração Google Ads do Zoho).
+  var gad = document.getElementById("zc_gad");
+  if (gad && !gad.value && params.get("gclid")) gad.value = params.get("gclid").slice(0, 255);
 
   var origem = document.getElementById("paginaOrigem");
   if (origem) {
@@ -196,6 +203,12 @@
 
   var fone = document.getElementById("Mobile");
   var foneMsg = document.getElementById("err-fone");
+  var phoneEl = document.getElementById("phoneOriginal");
+  var mobileEl = document.getElementById("mobileNormalizado");
+
+  // O campo visível não tem name: o número vai normalizado nos ocultos
+  // COBJ2CF4 (Celular_Informado) e COBJ2CF22 (Telefone_Informado).
+  fone.removeAttribute("name");
 
   var DDDS = [
     11,12,13,14,15,16,17,18,19,
@@ -209,7 +222,70 @@
     91,92,93,94,95,96,97,98,99
   ];
 
+  /* Telefone para o Zoho. Mesma regra da LP principal (lp/TELEFONE-BR.md em
+     academy-cards-sites): do número digitado derivam DOIS valores.
+       Phone  -> número informado em +55/E.164, sem tocar no 9
+       Mobile -> WhatsApp ID, sem o 9 fora dos DDDs abaixo
+     No fluxo Cadence -> WhatsApp -> Zoho Desk o WhatsApp ID nem sempre tem o
+     nono dígito, e o Desk criava um segundo Contact quando não batia.
+       (31) 99695-4497 -> Phone +5531996954497 | Mobile +553196954497
+       (11) 98805-5068 -> Phone +5511988055068 | Mobile +5511988055068
+     Se a lista mudar, atualizar junto todas as cópias da regra.            */
+
+  // DDDs em que o WhatsApp ID mantém o nono dígito.
+  var DDD_WHATSAPP_COM_9 = [
+    "11", "12", "13", "14", "15", "16", "17", "18", "19",
+    "21", "22", "24",
+    "27", "28"
+  ];
+
+  function temCodigoEstrangeiro(value) {
+    var raw = String(value || "").trim();
+    return raw.charAt(0) === "+" && raw.replace(/\D/g, "").slice(0, 2) !== "55";
+  }
+
+  // Dígitos nacionais (DDD + 8 ou 9), sem o código do país; "" se inválido.
+  // Precisa da string original: é o "+" que distingue +1 212... de um DDD 12.
+  function brNationalDigits(value) {
+    var raw = String(value || "").trim();
+    var digits = raw.replace(/\D/g, "");
+    if (!digits) return "";
+    var national;
+    if (raw.charAt(0) === "+") {
+      // "+" explícito: só +55 é aceito.
+      national = digits.slice(0, 2) === "55" ? digits.slice(2) : "";
+    } else if ((digits.length === 12 || digits.length === 13) && digits.slice(0, 2) === "55") {
+      // 55 sem o "+". Só com 12/13 dígitos: o DDD 55 existe.
+      national = digits.slice(2);
+    } else {
+      national = digits;
+    }
+    return (national.length === 10 || national.length === 11) ? national : "";
+  }
+
+  function toBrazilE164(value) {
+    var national = brNationalDigits(value);
+    return national ? "+55" + national : "";
+  }
+
+  function toWhatsAppNumber(value) {
+    var national = brNationalDigits(value);
+    if (!national) return "";
+    var ddd = national.slice(0, 2);
+    var numero = national.slice(2);
+    if (numero.length === 9 && numero.charAt(0) === "9" &&
+        DDD_WHATSAPP_COM_9.indexOf(ddd) === -1) {
+      numero = numero.slice(1);
+    }
+    return "+55" + ddd + numero;
+  }
+
   function maskFone(digits) {
+    // Descartar o 55 ANTES do corte em 11: sem isso, colar +5531996954497
+    // vira (55) 31996-9544 e o número se perde.
+    if ((digits.length === 12 || digits.length === 13) && digits.slice(0, 2) === "55") {
+      digits = digits.slice(2);
+    }
     var d = digits.slice(0, 11);
     if (d.length <= 2) return d.length ? "(" + d : "";
     if (d.length <= 6) return "(" + d.slice(0, 2) + ") " + d.slice(2);
@@ -221,6 +297,12 @@
     var before = fone.value;
     var digits = before.replace(/\D/g, "");
     var atEnd = fone.selectionStart === before.length;
+    // Código de país estrangeiro: não reformatar como brasileiro; a
+    // validação reprova.
+    if (temCodigoEstrangeiro(before)) {
+      if (fone.getAttribute("aria-invalid")) validateFone();
+      return;
+    }
     fone.value = maskFone(digits);
     if (atEnd) {
       var end = fone.value.length;
@@ -230,11 +312,14 @@
   });
 
   function validateFone() {
-    var d = fone.value.replace(/\D/g, "");
+    // Mesma fonte de verdade da normalização enviada ao Zoho.
+    var d = brNationalDigits(fone.value);
     var msg = "";
-    if (!d) {
+    if (!fone.value.replace(/\D/g, "")) {
       msg = "Por favor, preencha seu WhatsApp.";
-    } else if (d.length < 10) {
+    } else if (temCodigoEstrangeiro(fone.value)) {
+      msg = "Informe um número do Brasil, com DDD.";
+    } else if (!d) {
       msg = "Número incompleto. Inclua o DDD e os 9 dígitos.";
     } else if (DDDS.indexOf(parseInt(d.slice(0, 2), 10)) === -1) {
       msg = "DDD inválido. Confira os dois primeiros dígitos.";
@@ -248,11 +333,88 @@
 
   fone.addEventListener("blur", function () { if (fone.value) validateFone(); });
 
-  /* --- 6. Envio ------------------------------------------------------------ */
+  /* --- 6. Campos gerados no envio (Conversões) -------------------------------
+     Mesmo padrão da LP. Data/Hora_da_Conversao no formato do HTML gerado pelo
+     Zoho: data DD/MM/YYYY + hora 01..12, minuto 00..59 e AM/PM, relógio de
+     America/Sao_Paulo (gravado como -03:00, sem segundos).                  */
+
+  function saoPauloParts(d) {
+    var parts = {};
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Sao_Paulo",
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hourCycle: "h12"
+    }).formatToParts(d).forEach(function (p) { parts[p.type] = p.value; });
+    var h24 = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "America/Sao_Paulo", hour: "2-digit", hourCycle: "h23"
+    }).format(d);
+    return {
+      dd: parts.day, mm: parts.month, yyyy: parts.year,
+      hh12: parts.hour, min: parts.minute, ss: parts.second,
+      ampm: String(parts.dayPeriod || "").toUpperCase(),
+      hh24: h24
+    };
+  }
+
+  function newSubmissionId() {
+    try {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+    } catch (e) { /* segue para o fallback */ }
+    return "aulao-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+  }
+
+  var SUBMISSION_FIELD_IDS = ["convName", "dhData", "dhHora", "dhMinuto", "dhAmPm", "idExterno"];
+
+  // Lança erro se algum campo obrigatório da submissão não existir ou ficar
+  // vazio. A mensagem cita só o id do campo, nunca valores digitados.
+  function fillSubmissionFields() {
+    var els = {};
+    SUBMISSION_FIELD_IDS.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) throw new Error("Campo de submissão ausente: " + id);
+      els[id] = el;
+    });
+    var p = saoPauloParts(new Date());
+    els.dhData.value = p.dd + "/" + p.mm + "/" + p.yyyy;
+    els.dhHora.value = p.hh12;
+    els.dhMinuto.value = p.min;
+    els.dhAmPm.value = p.ampm;
+    // Name do registro (máx. 120): origem + e-mail + data/hora SP.
+    var emailTxt = String(email.value || "").trim().toLowerCase();
+    els.convName.value = ("Aulão Taci - " + emailTxt + " - " + p.yyyy + "-" + p.mm + "-" + p.dd +
+      " " + p.hh24 + ":" + p.min + ":" + p.ss).slice(0, 120);
+    // Um identificador novo por submissão.
+    els.idExterno.value = newSubmissionId();
+
+    SUBMISSION_FIELD_IDS.forEach(function (id) {
+      if (String(els[id].value || "") === "") throw new Error("Campo de submissão vazio: " + id);
+    });
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(els.dhData.value) ||
+        !/^\d{1,2}$/.test(els.dhHora.value) ||
+        !/^\d{2}$/.test(els.dhMinuto.value) ||
+        !/^(AM|PM)$/.test(els.dhAmPm.value)) {
+      throw new Error("Data/Hora da submissão inválida");
+    }
+  }
+
+  /* --- 7. Envio ------------------------------------------------------------ */
 
   var btn = document.getElementById("submitBtn");
   var btnLabel = document.getElementById("submitLabel");
+  var btnLabelOriginal = btnLabel.textContent;
   var enviando = false;
+
+  // Voltar do Zoho/obrigado pelo bfcache restaura a página com o botão
+  // travado em "Enviando…". Destrava.
+  window.addEventListener("pageshow", function () {
+    enviando = false;
+    btn.disabled = false;
+    btn.classList.remove("is-busy");
+    btnLabel.textContent = btnLabelOriginal;
+  });
 
   form.addEventListener("submit", function (e) {
     if (enviando) { e.preventDefault(); return; }
@@ -271,6 +433,33 @@
       }
       return;
     }
+
+    // Os dois derivam do valor digitado. O campo visível NÃO é sobrescrito:
+    // ao voltar pelo bfcache, um reenvio gravaria Phone já sem o nono dígito.
+    phoneEl.value = toBrazilE164(fone.value);
+    mobileEl.value = toWhatsAppNumber(fone.value);
+
+    try {
+      fillSubmissionFields();
+    } catch (err) {
+      e.preventDefault();
+      alertBox.textContent = "Não foi possível enviar agora. Recarregue a página e tente de novo.";
+      try { console.error("[inscricao]", err && err.message); } catch (e2) { /* sem console */ }
+      return;
+    }
+
+    // GTM: submissão local válida. Nome próprio, não lp_form_submit: o
+    // container é o da LP principal e as tags dela não devem disparar aqui.
+    // Corre contra a navegação do POST nativo; a conversão confiável é o
+    // pageview de /obrigado. Sem dados pessoais no payload.
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "aulao_form_submit",
+        form_id: "formInscricao",
+        form_location: "inscricao"
+      });
+    } catch (err) { /* tracking nunca bloqueia o envio */ }
 
     alertBox.textContent = "";
     enviando = true;
