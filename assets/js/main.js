@@ -1,5 +1,5 @@
 /* =============================================================================
-   Aulão "Nova Cartilha do ENEM" - Profa. Taci × Academy Cards
+   Aulão de demonstração da Academy Cards (16/11/2026, 18h)
    -----------------------------------------------------------------------------
    O formulário é um POST nativo para o Webform de Conversões do Zoho
    (7253906000002963033), no mesmo padrão da LP. Este arquivo acrescenta
@@ -384,7 +384,7 @@
     els.dhAmPm.value = p.ampm;
     // Name do registro (máx. 120): origem + e-mail + data/hora SP.
     var emailTxt = String(email.value || "").trim().toLowerCase();
-    els.convName.value = ("Aulão Taci - " + emailTxt + " - " + p.yyyy + "-" + p.mm + "-" + p.dd +
+    els.convName.value = ("Aulão Demo App - " + emailTxt + " - " + p.yyyy + "-" + p.mm + "-" + p.dd +
       " " + p.hh24 + ":" + p.min + ":" + p.ss).slice(0, 120);
     // Um identificador novo por submissão.
     els.idExterno.value = newSubmissionId();

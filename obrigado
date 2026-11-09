@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Inscrição confirmada | Aulão Nova Cartilha do ENEM</title>
-<meta name="description" content="Sua inscrição no aulão gratuito da nova Cartilha do ENEM foi registrada. O link de acesso chega por e-mail e WhatsApp.">
+<title>Inscrição confirmada | Aulão gratuito Academy Cards</title>
+<meta name="description" content="Sua inscrição no aulão gratuito de demonstração da Academy Cards foi registrada. O link de acesso chega por e-mail e WhatsApp.">
 <meta name="robots" content="noindex, follow">
 
 <!-- Google Tag Manager (mesmo container da LP principal). Esta página é o
@@ -38,9 +38,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <header class="masthead masthead--flush">
   <div class="wrap">
     <div class="lockup rise" style="animation-delay:.05s">
-      <img class="lockup__taci" src="assets/img/taci-wordmark.webp"
-           alt="Projeto Redação com Taciane Weber" width="420" height="172">
-      <div class="lockup__rule" aria-hidden="true"></div>
       <img class="lockup__academy" src="assets/img/academy-bone.svg"
            alt="Academy Cards" width="173" height="27">
     </div>
@@ -64,7 +61,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <p class="thanks__lede rise" style="animation-delay:.24s">
         Sua vaga no aulão está garantida. Nos vemos em
-        <strong>08 de outubro, às 20h</strong>, on-line e ao vivo.
+        <strong>16 de novembro, às 18h</strong>, ao vivo pelo Google Meet.
       </p>
 
       <ul class="steps rise" style="animation-delay:.3s">
@@ -75,7 +72,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <path d="M3 7l9 6 9-6"/>
           </svg>
           <span>
-            <strong>Confira seu e-mail.</strong> O link de acesso é enviado para o
+            <strong>Confira seu e-mail.</strong> O link de acesso já foi enviado para o
             endereço que você cadastrou. Se não encontrar, procure na caixa de
             spam ou na aba de promoções.
           </span>
@@ -86,8 +83,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <path d="M21 11.5a8.5 8.5 0 01-12.6 7.4L3.5 20.5l1.7-4.8A8.5 8.5 0 1121 11.5z"/>
           </svg>
           <span>
-            <strong>Fique de olho no WhatsApp.</strong> Também enviamos o acesso e
-            o lembrete por lá, no número que você informou.
+            <strong>Fique de olho no WhatsApp.</strong> No dia do aulão, enviamos
+            o lembrete com o link por lá, no número que você informou.
           </span>
         </li>
         <li>
@@ -97,7 +94,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>
           </svg>
           <span>
-            <strong>Anote na agenda:</strong> quinta-feira, 08/10, às 20h
+            <strong>Anote na agenda:</strong> segunda-feira, 16/11, às 18h
             (horário de Brasília).
           </span>
         </li>
@@ -110,15 +107,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <footer class="footer">
   <div class="wrap footer__inner">
     <div class="lockup">
-      <img class="lockup__taci" src="assets/img/taci-wordmark.webp"
-           alt="Projeto Redação com Taciane Weber" width="420" height="172"
-           loading="lazy" decoding="async">
-      <div class="lockup__rule" aria-hidden="true"></div>
       <img class="lockup__academy" src="assets/img/academy-bone.svg"
            alt="Academy Cards" width="173" height="27" loading="lazy" decoding="async">
     </div>
     <p class="footer__fine">
-      Uma realização da Profa. Taci em parceria com a Academy Cards®.
+      Uma realização da Academy Cards®.
       Os dados informados são usados para enviar o acesso ao aulão e
       comunicações relacionadas ao evento.
     </p>

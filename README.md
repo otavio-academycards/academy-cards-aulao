@@ -1,7 +1,28 @@
-# Aulão "Nova Cartilha do ENEM", Profa. Taci × Academy Cards
+# Aulão de demonstração da Academy Cards (16/11/2026, 18h)
 
 Landing page de evento único, com uma única conversão: inscrição no aulão
-gratuito de **08/10/2026, às 20h** (quinta-feira, horário de Brasília).
+gratuito de demonstração do aplicativo em **16/11/2026, às 18h** (segunda-feira,
+horário de Brasília), pelo Google Meet. É a abertura da Black Friday 2026.
+
+A versão anterior desta página (aulão "Nova Cartilha do ENEM" com a Profa. Taci,
+08/10/2026) está preservada no histórico Git, na branch `main`.
+
+### Integração atual com o Zoho CRM (vale sobre o que está descrito abaixo)
+
+- POST nativo para `https://crm.zoho.com/crm/WebForm`, Webform de Conversões
+  **"Aulao Demo App 16-11 - Conversoes"** (`7253906000005337063`), sem resposta
+  automática.
+- Ativo de Conversão **"Aulão Demonstração App 16/11"** (`7253906000005355001`,
+  tipo Evento, sem Cadence) em `COBJ2CF112`; `Data_do_Evento` = `16/11/2026`
+  em `COBJ2CF54`; `Name` gerado por `main.js` com o prefixo "Aulão Demo App".
+- Confirmação por e-mail: workflow em Conversões (na criação, Ativo = aulão de
+  16/11) com a notificação `7253906000005348043` e o template
+  `7253906000005336011`, cujo HTML está em `emails/confirmacao-aulao-demo-16-11.html`.
+- As seções "Formulário (Zoho CRM)" e "Campos enviados" abaixo descrevem o
+  formulário antigo de Contacts (`WebToContactForm`, `CONTACTCF*`) e estão
+  desatualizadas; a fonte da verdade é o `index.html`.
+- `assets/img/og-image.jpg` agora é gerada sem a foto da Taci (o
+  `tools/build-assets.py` ainda gera a versão antiga: não rodar sem ajustar).
 
 HTML/CSS/JS estático. Sem build, sem `package.json`, sem dependências em
 runtime. Para publicar, suba a pasta inteira.
