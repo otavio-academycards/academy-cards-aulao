@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Inscrição confirmada | Aulão gratuito Academy Cards</title>
-<meta name="description" content="Sua inscrição no aulão gratuito de demonstração da Academy Cards foi registrada. O link de acesso chega por e-mail e WhatsApp.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vaga garantida | Aulão gratuito Academy Cards</title>
+<meta name="description" content="Sua inscrição no aulão gratuito de demonstração da Academy Cards foi registrada. O link de acesso chega por e-mail e o lembrete, pelo WhatsApp.">
 <meta name="robots" content="noindex, follow">
 
 <!-- Google Tag Manager (mesmo container da LP principal). Esta página é o
@@ -23,8 +23,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <meta name="theme-color" content="#001A27">
 
-<link rel="preload" href="assets/fonts/nunito.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/styles.css">
+<!-- Caminhos absolutos: a página também é servida em /obrigado e em
+     /obrigado/index.html (ver deploy.sh), onde o relativo quebraria. -->
+<link rel="preload" href="/assets/fonts/nunito.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 
 <body>
@@ -33,83 +35,137 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<div class="backdrop" aria-hidden="true"></div>
-
-<header class="masthead masthead--flush">
-  <div class="wrap">
-    <div class="lockup rise" style="animation-delay:.05s">
-      <img class="lockup__academy" src="assets/img/academy-bone.svg"
-           alt="Academy Cards" width="173" height="27">
-    </div>
+<header class="masthead">
+  <div class="wrap masthead__inner">
+    <img class="masthead__logo rise" src="/assets/img/academy-bone.svg"
+         alt="Academy Cards" width="173" height="27">
+    <p class="masthead__when rise" style="animation-delay:.08s">
+      <span class="live-dot" aria-hidden="true"></span>
+      Ao vivo · 16/11, 18h
+    </p>
   </div>
 </header>
 
 <main class="thanks">
   <div class="wrap">
-    <div class="thanks__inner">
+    <!-- Duas colunas no computador. Esquerda: confirmação, link da sala e
+         aviso da Black. Direita: os três passos. Os blocos são filhos diretos
+         do grid; no celular ficam numa coluna: confirmação, link, passos e
+         aviso. -->
+    <div class="thanks__grid">
 
-      <div class="thanks__check rise" style="animation-delay:.12s" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
-             stroke-linecap="round" stroke-linejoin="round">
+    <div class="thanks__head">
+      <p class="thanks__badge rise" style="animation-delay:.1s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4.5 12.5l5 5 10-11"/>
         </svg>
-      </div>
-
-      <h1 class="thanks__title rise" style="animation-delay:.18s">
-        Inscrição confirmada.
-      </h1>
-
-      <p class="thanks__lede rise" style="animation-delay:.24s">
-        Sua vaga no aulão está garantida. Nos vemos em
-        <strong>16 de novembro, às 18h</strong>, ao vivo pelo Google Meet.
+        Inscrição confirmada
       </p>
 
-      <ul class="steps rise" style="animation-delay:.3s">
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="2.5" y="5" width="19" height="14" rx="2.5"/>
-            <path d="M3 7l9 6 9-6"/>
-          </svg>
-          <span>
-            <strong>Confira seu e-mail.</strong> O link de acesso já foi enviado para o
-            endereço que você cadastrou. Se não encontrar, procure na caixa de
-            spam ou na aba de promoções.
-          </span>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 11.5a8.5 8.5 0 01-12.6 7.4L3.5 20.5l1.7-4.8A8.5 8.5 0 1121 11.5z"/>
-          </svg>
-          <span>
-            <strong>Fique de olho no WhatsApp.</strong> No dia do aulão, enviamos
-            o lembrete com o link por lá, no número que você informou.
-          </span>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="4.5" width="18" height="16" rx="2.5"/>
-            <path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>
-          </svg>
-          <span>
-            <strong>Anote na agenda:</strong> segunda-feira, 16/11, às 18h
-            (horário de Brasília).
-          </span>
-        </li>
-      </ul>
+      <h1 class="thanks__title rise" style="animation-delay:.2s">
+        Pronto, sua vaga está garantida!
+      </h1>
 
-    </div>
+      <p class="thanks__lede rise" style="animation-delay:.26s">
+        Nos vemos na <strong>segunda-feira, 16 de novembro, às 18h</strong>
+        (horário de Brasília), ao vivo pelo Google Meet.
+      </p>
+
+      <p class="thanks__count rise" style="animation-delay:.3s" data-countdown></p>
+    </div><!-- /.thanks__head -->
+
+      <!-- Link da sala: o mesmo do e-mail de confirmação e das mensagens de
+           WhatsApp. Se a sala mudar, atualizar aqui, no convite de agenda
+           abaixo e no template do e-mail. -->
+      <div class="meet rise" style="animation-delay:.34s">
+        <p class="meet__label">Link da sala no Google Meet</p>
+        <p class="meet__url" id="meetUrl">meet.google.com/sud-uoww-fmu</p>
+        <div class="meet__actions">
+          <a class="meet__open" href="https://meet.google.com/sud-uoww-fmu"
+             target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2.5" y="5" width="14" height="14" rx="3"/>
+              <path d="M16.5 10l5-3v10l-5-3"/>
+            </svg>
+            Abrir a sala
+          </a>
+          <button class="meet__copy" type="button"
+                  data-copy="https://meet.google.com/sud-uoww-fmu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/>
+              <path d="M15.5 8.5V6a2.5 2.5 0 00-2.5-2.5H6A2.5 2.5 0 003.5 6v7A2.5 2.5 0 006 15.5h2.5"/>
+            </svg>
+            <span data-copy-label>Copiar link</span>
+          </button>
+        </div>
+        <p class="meet__note">É a mesma sala no dia do aulão. Guarde este link.</p>
+      </div>
+
+      <!-- Três passos para a inscrição virar presença. -->
+      <ol class="todo rise" style="animation-delay:.36s">
+        <li class="todo__item">
+          <div class="todo__body">
+            <h2 class="todo__title">Abra seu e-mail</h2>
+            <p class="todo__text">
+              A confirmação com o link já foi enviada para o endereço que você
+              cadastrou. Não achou? Procure no spam ou na aba Promoções e mova
+              para a caixa de entrada.
+            </p>
+          </div>
+        </li>
+        <li class="todo__item">
+          <div class="todo__body">
+            <h2 class="todo__title">Salve na sua agenda</h2>
+            <p class="todo__text">
+              Segunda, 16/11, às 18h. Um toque e o aulão fica no seu calendário,
+              já com o link da sala.
+            </p>
+            <!-- Mesmo convite do e-mail de confirmação: 18h às 19h30, com o
+                 link da sala na descrição e no local. -->
+            <a class="todo__action" target="_blank" rel="noopener"
+               href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Aul%C3%A3o%20gratuito%20Academy%20Cards&amp;dates=20261116T210000Z%2F20261116T223000Z&amp;details=Demonstra%C3%A7%C3%A3o%20gratuita%20do%20aplicativo%20Academy%20Cards.%20Sala%3A%20https%3A%2F%2Fmeet.google.com%2Fsud-uoww-fmu&amp;location=https%3A%2F%2Fmeet.google.com%2Fsud-uoww-fmu">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4.5" width="18" height="16" rx="2.5"/>
+                <path d="M3 9.5h18M8 2.5v4M16 2.5v4M12 12.5v5M9.5 15h5"/>
+              </svg>
+              Adicionar à agenda
+            </a>
+          </div>
+        </li>
+        <li class="todo__item">
+          <div class="todo__body">
+            <h2 class="todo__title">Fique de olho no WhatsApp</h2>
+            <p class="todo__text">
+              No dia do aulão, mandamos o lembrete com o link no número que você
+              informou.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <p class="thanks__tip rise" style="animation-delay:.42s">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="8.5" width="17" height="12" rx="2"/>
+          <path d="M3.5 12.5h17M12 8.5v12M12 8.5c-1.5-3.5-5.5-4-5.5-1.5S10 8.5 12 8.5zM12 8.5c1.5-3.5 5.5-4 5.5-1.5S14 8.5 12 8.5z"/>
+        </svg>
+        <span>
+          <strong>Fique até o final.</strong> É no fim do aulão que a gente abre a
+          Black Friday da Academy Cards.
+        </span>
+      </p>
+    </div><!-- /.thanks__grid -->
   </div>
 </main>
 
 <footer class="footer">
   <div class="wrap footer__inner">
-    <div class="lockup">
-      <img class="lockup__academy" src="assets/img/academy-bone.svg"
-           alt="Academy Cards" width="173" height="27" loading="lazy" decoding="async">
-    </div>
+    <img class="footer__logo" src="/assets/img/academy-bone.svg"
+         alt="Academy Cards" width="173" height="27" loading="lazy" decoding="async">
     <p class="footer__fine">
       Uma realização da Academy Cards®.
       Os dados informados são usados para enviar o acesso ao aulão e
@@ -117,5 +173,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </p>
   </div>
 </footer>
+
+<script src="/assets/js/ui.js" defer></script>
 </body>
 </html>

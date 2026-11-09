@@ -108,9 +108,25 @@ O formulário tem markup próprio e faz **POST nativo** para
 e tokens ocultos do snippet original do Zoho. O CSS e o JS que vinham no
 snippet foram descartados; o script de analytics `wf_anal` foi mantido.
 
-**Funciona sem JavaScript.** Sem JS perdem-se a máscara do telefone, a
-validação inline, a captura de UTM e a normalização do telefone (`Mobile` vai
-como digitado e `Phone` vazio); o envio em si continua funcionando.
+**Só funciona com JavaScript (anti-bot, desde 09/11/2026).** Um robô leu o
+HTML, preencheu todos os inputs e fez o POST sem rodar o JS. Por isso:
+
+- o HTML **não** traz em texto o `action` do Zoho nem os valores de
+  `xnQsjsdp`, `xmIwtLD` e `actionType`. Um `<script>` inline síncrono logo
+  depois do `</form>` (em `index.html`) completa o formulário ao carregar a
+  página, com os tokens guardados **invertidos** e a URL montada em partes.
+  Ele roda antes do `wf_anal` e do `main.js` (ambos `defer`), então a análise
+  de webform do Zoho (Visitas, Iniciantes, Envios) vê o formulário completo.
+  O `main.js` só confere, no envio, que o action e os tokens estão lá. Se o
+  Webform for recriado no Zoho, inverter os novos tokens e trocar **nesse
+  script inline**;
+- checagem humana antes do envio: pelo menos 2 s desde o carregamento da
+  página e uma interação real (`pointerdown`, `touchstart` ou `keydown` com
+  `isTrusted`). O limite conta desde o load, então autocomplete não é barrado.
+  Se faltar, nada é descartado: o botão vira o bloco "Só mais um passo" com
+  "Confirmar minha inscrição", e o clique real envia com todos os dados.
+
+Sem JS, o envio não chega ao Zoho (decisão aceita).
 
 ### Campos enviados
 
@@ -170,6 +186,7 @@ da LP principal. Dois sinais de inscrição:
 | Sinal | Quando | Confiabilidade |
 |---|---|---|
 | `dataLayer` `aulao_form_submit` (`form_id`, `form_location`, sem dados pessoais) | submissão local válida, antes do POST ao Zoho | pode se perder: corre contra a navegação |
+| `dataLayer` `aulao_form_challenge_shown` / `aulao_form_challenge_confirmed` | checagem humana exibida / confirmada com clique real | diagnóstico do anti-bot, não é conversão |
 | Pageview de `/obrigado` | Zoho aceitou e redirecionou | conversão principal; recarregar conta de novo |
 
 O nome é próprio de propósito: com `lp_form_submit`, as tags da LP principal
@@ -222,7 +239,11 @@ Vale testar:
 - enviar, voltar pelo botão Voltar → campo intacto e botão respondendo;
 - abrir com `?utm_source=instagram&utm_medium=bio&fbclid=abc` e inspecionar os
   campos ocultos;
-- desligar o JavaScript e conferir que o POST nativo continua de pé.
+- enviar por script logo após o load (`form.requestSubmit()` no console, sem
+  clicar na página) → aparece "Só mais um passo"; clicar em "Confirmar minha
+  inscrição" segue o envio;
+- ver o código-fonte da página (sem JS) → não existe a URL do Zoho nem os
+  valores dos tokens.
 
 No envio real, confira o registro **dentro do Zoho**, pelos rótulos
 "Telefone" e "Celular": payload certo no Network não basta, porque o Zoho

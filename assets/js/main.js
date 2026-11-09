@@ -2,7 +2,7 @@
    Aulão de demonstração da Academy Cards (16/11/2026, 18h)
    -----------------------------------------------------------------------------
    O formulário é um POST nativo para o Webform de Conversões do Zoho
-   (7253906000002963033), no mesmo padrão da LP. Este arquivo acrescenta
+   (7253906000005337063), no mesmo padrão da LP. Este arquivo acrescenta
    máscara, validação inline, captura de atribuição, a derivação de
    Telefone/Celular e os campos gerados no envio (Name, Data/Hora da
    Conversão e ID da submissão), obrigatórios no Webform.
@@ -16,6 +16,61 @@
 
   var form = document.getElementById("formInscricao");
   if (!form) return;
+
+  /* --- 0. Anti-bot ----------------------------------------------------------
+     Em 09/11 um robô leu o HTML, preencheu todos os inputs (inclusive os
+     ocultos) e fez o POST direto, sem rodar este arquivo. Duas camadas:
+       a) o action do Zoho e os tokens do Webform NÃO estão em texto no HTML;
+          um script inline logo depois do </form> (index.html) completa o
+          formulário ao carregar, antes do wf_anal, para a análise de webform
+          do Zoho seguir contando. Aqui só conferimos que isso aconteceu
+          (destinoZohoPronto);
+       b) checagem humana: o envio exige >= 2 s desde o carregamento da página
+          e uma interação real (pointerdown, touchstart ou keydown com
+          isTrusted). Se faltar, nada é descartado: o card pede uma
+          confirmação com um toque, e o clique real envia.
+     O limite conta desde o load, não desde a digitação: quem usa
+     autocomplete não é barrado.                                            */
+
+  var TEMPO_MINIMO_MS = 2000;
+
+  var interagiu = false;
+  var confirmado = false; // clique real em "Confirmar minha inscrição"
+
+  function marcarInteracao(e) {
+    if (e && e.isTrusted) interagiu = true;
+  }
+  ["pointerdown", "touchstart", "keydown"].forEach(function (tipo) {
+    document.addEventListener(tipo, marcarInteracao, { capture: true, passive: true });
+  });
+
+  // performance.now() conta desde o início da navegação (o "load" da página).
+  function msDesdeCarregamento() {
+    try { return window.performance.now(); } catch (e) { return TEMPO_MINIMO_MS; }
+  }
+
+  function pareceHumano() {
+    return confirmado || (interagiu && msDesdeCarregamento() >= TEMPO_MINIMO_MS);
+  }
+
+  // Lança erro se o script inline não completou o formulário: sem isso o
+  // POST iria para a própria página e a inscrição se perderia em silêncio.
+  function destinoZohoPronto() {
+    if (!/^https:\/\/crm\.zoho\.com\/crm\/WebForm$/.test(form.getAttribute("action") || "")) {
+      throw new Error("Action do Webform ausente");
+    }
+    ["xnQsjsdp", "xmIwtLD", "actionType"].forEach(function (nome) {
+      var el = form.elements.namedItem(nome);
+      if (!el || !el.value) throw new Error("Token ausente: " + nome);
+    });
+  }
+
+  function pushDataLayer(evento) {
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: evento, form_id: "formInscricao", form_location: "inscricao" });
+    } catch (err) { /* tracking nunca bloqueia o envio */ }
+  }
 
   /* --- 1. Atribuição -------------------------------------------------------
      Copia UTMs e click IDs da query string para os campos ocultos do Zoho.   */
@@ -407,6 +462,46 @@
   var btnLabelOriginal = btnLabel.textContent;
   var enviando = false;
 
+  var confirmBox = document.getElementById("formConfirm");
+  var confirmBtn = document.getElementById("confirmBtn");
+
+  function mostrarConfirmacao() {
+    if (!confirmBox) return;
+    var jaVisivel = !confirmBox.hidden;
+    btn.hidden = true;
+    confirmBox.hidden = false;
+    if (!jaVisivel) pushDataLayer("aulao_form_challenge_shown");
+    try { confirmBtn.focus({ preventScroll: true }); } catch (e) { /* sem foco */ }
+  }
+
+  function esconderConfirmacao() {
+    if (confirmBox) confirmBox.hidden = true;
+    btn.hidden = false;
+  }
+
+  // Dispara o mesmo fluxo de envio (handler abaixo) a partir do botão de
+  // confirmação, com o botão principal como submitter.
+  function reenviar() {
+    if (typeof form.requestSubmit === "function") {
+      form.requestSubmit(btn);
+      return;
+    }
+    var ev;
+    try { ev = new Event("submit", { cancelable: true }); }
+    catch (e) { ev = document.createEvent("Event"); ev.initEvent("submit", false, true); }
+    if (form.dispatchEvent(ev)) form.submit();
+  }
+
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", function (e) {
+      if (!e.isTrusted) return; // só clique, toque ou tecla de verdade
+      confirmado = true;
+      pushDataLayer("aulao_form_challenge_confirmed");
+      esconderConfirmacao();
+      reenviar();
+    });
+  }
+
   // Voltar do Zoho/obrigado pelo bfcache restaura a página com o botão
   // travado em "Enviando…". Destrava.
   window.addEventListener("pageshow", function () {
@@ -434,6 +529,15 @@
       return;
     }
 
+    // Checagem humana: cedo demais ou sem interação real -> pede um toque de
+    // confirmação. Nada é descartado e nada vai para o Zoho.
+    if (!pareceHumano()) {
+      e.preventDefault();
+      alertBox.textContent = "";
+      mostrarConfirmacao();
+      return;
+    }
+
     // Os dois derivam do valor digitado. O campo visível NÃO é sobrescrito:
     // ao voltar pelo bfcache, um reenvio gravaria Phone já sem o nono dígito.
     phoneEl.value = toBrazilE164(fone.value);
@@ -441,6 +545,7 @@
 
     try {
       fillSubmissionFields();
+      destinoZohoPronto();
     } catch (err) {
       e.preventDefault();
       alertBox.textContent = "Não foi possível enviar agora. Recarregue a página e tente de novo.";
@@ -452,14 +557,7 @@
     // container é o da LP principal e as tags dela não devem disparar aqui.
     // Corre contra a navegação do POST nativo; a conversão confiável é o
     // pageview de /obrigado. Sem dados pessoais no payload.
-    try {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: "aulao_form_submit",
-        form_id: "formInscricao",
-        form_location: "inscricao"
-      });
-    } catch (err) { /* tracking nunca bloqueia o envio */ }
+    pushDataLayer("aulao_form_submit");
 
     alertBox.textContent = "";
     enviando = true;
