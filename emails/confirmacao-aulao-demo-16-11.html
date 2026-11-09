@@ -5,29 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="x-apple-disable-message-reformatting" />
 <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
-<title>Inscrição confirmada - Aulão gratuito da Academy Cards</title>
+<title>Seu ingresso para o aulão da Academy Cards</title>
 
 <!--
   E-mail de confirmação da inscrição no aulão de demonstração da Academy Cards
   (16/11/2026, 18h, Google Meet). Template de e-mail do Zoho CRM no módulo
-  Conversões, enviado pelo workflow na criação da Conversão com o Ativo
-  "Aulão Demonstração App 16/11" (7253906000005355001).
+  Conversões (7253906000005336011), enviado pelo workflow "Aulao Demo 16-11 -
+  e-mail de confirmacao" na criação da Conversão com o Ativo 7253906000005355001.
 
-  Mesma base técnica do e-mail do aulão da Taci (confirmacao-inscricao-conversoes.html):
-  tabelas, estilos inline, sem SVG e sem WebP. Identidade só da Academy Cards.
-  Campo de mesclagem: ${!Conversoes.Nome_Informado}.
-  Sem travessão em nenhum texto (preferência do cliente).
+  Conceito: o e-mail é o INGRESSO do aulão. Um bilhete com canhoto destacável
+  (data em amarelo, linha picotada) e o botão de entrar na sala, na mesma paleta
+  da landing page (navy #001A27, azul #3FBFFF, amarelo #FFE86D,
+  laranja #FFA858, névoa #E7F7FF).
+
+  Regras técnicas de e-mail:
+    · Tabelas e estilos inline. O bloco <style> só melhora o mobile; se o
+      cliente apagá-lo, o e-mail continua legível.
+    · Sem SVG e sem WebP (Gmail/Outlook não exibem). Imagens em PNG hospedadas:
+        logo  https://aulao.academycards.com.br/assets/img/academy-bone.png
+        redes https://academy-cards-imagens-publicas.s3.us-east-1.amazonaws.com/redes/*.png
+    · Campo de mesclagem: ${!Conversoes.Nome_Informado}, em linha própria, para
+      nenhuma frase depender dele se vier vazio.
+    · Sem travessão em nenhum texto (preferência do cliente).
 -->
 
 <style type="text/css">
   body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
   table { border-collapse: collapse !important; }
+  img { border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
   a { text-decoration: none; }
   @media screen and (max-width: 620px) {
-    .sm-full  { width: 100% !important; max-width: 100% !important; }
-    .sm-edge  { padding: 14px 10px !important; }
-    .sm-pad   { padding-left: 22px !important; padding-right: 22px !important; }
-    .sm-title { font-size: 28px !important; line-height: 1.15 !important; }
+    .sm-full   { width: 100% !important; max-width: 100% !important; }
+    .sm-edge   { padding: 12px 8px !important; }
+    .sm-pad    { padding-left: 22px !important; padding-right: 22px !important; }
+    .sm-title  { font-size: 30px !important; line-height: 1.08 !important; }
+    /* Ingresso no celular: o canhoto vira uma faixa no topo (data e hora numa
+       linha) e o corpo vem embaixo, na largura toda. Clientes que ignoram
+       <style> continuam com as duas colunas do desktop. */
+    .sm-block  { display: block !important; width: 100% !important; box-sizing: border-box !important; }
+    .sm-stub   { border-right: 0 !important; border-bottom: 2px dashed #001A27 !important; border-radius: 18px 18px 0 0 !important; padding: 14px 16px !important; }
+    .sm-body   { border-radius: 0 0 18px 18px !important; }
+    .sm-inl    { display: inline-block !important; vertical-align: middle !important; margin: 0 5px !important; }
+    .sm-day    { font-size: 40px !important; }
+    .sm-tpad   { padding: 20px 18px !important; }
+    .sm-hide   { display: none !important; }
   }
 </style>
 </head>
@@ -35,163 +56,224 @@
 <body style="margin:0; padding:0; width:100%; background-color:#E7F7FF;">
 
 <div style="display:none; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden; mso-hide:all;">
-  Sua vaga está garantida: segunda-feira, 16 de novembro, às 18h, no Google Meet.
+  Seu ingresso chegou: segunda, 16/11, às 18h, ao vivo no Google Meet. Guarde este e-mail.
   &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
 </div>
 
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#E7F7FF" style="background-color:#E7F7FF;">
 <tr>
-<td align="center" class="sm-edge" style="padding:28px 16px;">
+<td align="center" class="sm-edge" style="padding:28px 14px;">
 
   <!--[if mso]>
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tr><td>
   <![endif]-->
 
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="sm-full" bgcolor="#001A27" style="width:600px; max-width:600px; background-color:#001A27; border-radius:24px;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="sm-full" style="width:600px; max-width:600px;">
 
+    <!-- ================================================================
+         TOPO navy: marca, saudação e título
+         ================================================================ -->
     <tr>
-      <td align="center" class="sm-pad" style="padding:30px 36px 26px 36px; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:16px; font-weight:800; letter-spacing:0.02em; color:#E3E3DE;">
-        Academy Cards
-      </td>
-    </tr>
-
-    <tr>
-      <td class="sm-pad" style="padding:0 36px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+      <td bgcolor="#001A27" style="background-color:#001A27; border-radius:26px 26px 0 0;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
           <tr>
-            <td bgcolor="#3FBFFF" style="border-radius:999px; padding:7px 16px; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#001A27;">
-              Inscrição confirmada
-            </td>
-          </tr>
-        </table>
-
-        <h1 class="sm-title" style="margin:20px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:34px; line-height:1.1; font-weight:800; letter-spacing:-0.02em; color:#E3E3DE;">
-          Sua vaga está garantida.
-        </h1>
-
-        <p style="margin:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:16px; line-height:1.6; color:#A9B4B6;">
-          Olá, ${!Conversoes.Nome_Informado}!<br />
-          Sua inscrição no <strong style="color:#E3E3DE; font-weight:700;">aulão gratuito da Academy Cards</strong> está confirmada.
-          Vamos mostrar o aplicativo na prática, explicar como funciona a organização das revisões e apresentar
-          as funcionalidades que podem ajudar na sua preparação para o ENEM e os vestibulares.
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td class="sm-pad" style="padding:28px 36px 0 36px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
-          <tr>
-            <td bgcolor="#F7F6F2" style="background-color:#F7F6F2; border-radius:22px; padding:26px 26px 28px 26px;">
-
-              <p style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#18434A;">
-                Quando acontece
-              </p>
-              <p style="margin:10px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:22px; line-height:1.3; font-weight:800; letter-spacing:-0.02em; color:#001A27;">
-                Segunda-feira, 16 de novembro, às 18h <span style="font-size:15px; font-weight:700; color:#4A5C63;">(horário de Brasília)</span>
-              </p>
-              <p style="margin:8px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.55; color:#3D4F56;">
-                Ao vivo e gratuito, pelo Google Meet.
-              </p>
-
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
+            <td class="sm-pad" style="padding:26px 34px 0 34px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
-                  <td style="padding-top:5px; border-top:1px solid #DDDCD5;">
-                    <p style="margin:18px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#18434A;">
-                      Link de acesso
-                    </p>
+                  <td align="left" valign="middle">
+                    <img src="https://aulao.academycards.com.br/assets/img/academy-bone.png" alt="Academy Cards" width="132" style="display:block; width:132px; height:auto;" />
                   </td>
-                </tr>
-                <tr>
-                  <td align="center" style="padding-top:14px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;">
+                  <td align="right" valign="middle" class="sm-hide">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="right">
                       <tr>
-                        <td align="center" bgcolor="#3FBFFF" style="background-color:#3FBFFF; border-radius:14px;">
-                          <a href="https://meet.google.com/sud-uoww-fmu" target="_blank" style="display:block; padding:16px 30px; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:16px; font-weight:800; color:#001A27; text-decoration:none; border-radius:14px;">
-                            Entrar na sala do aulão &rarr;
-                          </a>
+                        <td bgcolor="#FFE86D" style="background-color:#FFE86D; border-radius:999px; padding:6px 13px; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#001A27; white-space:nowrap;">
+                          &#10003;&nbsp; Inscrição confirmada
                         </td>
                       </tr>
                     </table>
                   </td>
                 </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="sm-pad" style="padding:22px 34px 0 34px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
-                  <td align="center" style="padding-top:12px;">
-                    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Aul%C3%A3o%20gratuito%20Academy%20Cards&amp;dates=20261116T210000Z%2F20261116T223000Z&amp;details=Demonstra%C3%A7%C3%A3o%20gratuita%20do%20aplicativo%20Academy%20Cards.%20Sala%3A%20https%3A%2F%2Fmeet.google.com%2Fsud-uoww-fmu&amp;location=https%3A%2F%2Fmeet.google.com%2Fsud-uoww-fmu" target="_blank" style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:14px; font-weight:800; color:#18434A; text-decoration:underline;">
-                      Adicionar à minha agenda (Google Agenda)
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding-top:14px;">
-                    <p style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:14px; line-height:1.6; color:#3D4F56;">
-                      Ou copie este endereço:<br />
-                      <a href="https://meet.google.com/sud-uoww-fmu" target="_blank" style="color:#18434A; font-weight:800; text-decoration:underline; word-break:break-all;">meet.google.com/sud-uoww-fmu</a>
+                  <td valign="bottom" style="padding-bottom:28px;">
+                    <p style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:16px; line-height:1.4; font-weight:700; color:#93DBFF;">
+                      Olá, ${!Conversoes.Nome_Informado}!
                     </p>
-                    <p style="margin:12px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; line-height:1.55; color:#5A6B72;">
-                      É a mesma sala no dia do aulão. Guarde este e-mail ou salve o link na sua agenda.
+                    <h1 class="sm-title" style="margin:8px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:38px; line-height:1.05; font-weight:800; letter-spacing:-0.025em; color:#F3FBFF;">
+                      Seu ingresso chegou.<br /><span style="color:#3FBFFF; white-space:nowrap;">A vaga é sua.</span>
+                    </h1>
+                    <p style="margin:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.6; color:#BFD9E6;">
+                      Você vai ver a Academy Cards funcionando de verdade, com telas reais do app e tempo para tirar suas dúvidas ao vivo.
                     </p>
                   </td>
                 </tr>
               </table>
-
             </td>
           </tr>
         </table>
       </td>
     </tr>
 
+    <!-- ================================================================
+         INGRESSO: canhoto amarelo com a data + corpo creme com hora, local,
+         botão da sala e agenda. A linha picotada separa as duas partes.
+         ================================================================ -->
     <tr>
-      <td class="sm-pad" style="padding:34px 36px 0 36px;">
-        <h2 style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:20px; line-height:1.25; font-weight:800; letter-spacing:-0.02em; color:#E3E3DE;">
-          O que vamos mostrar
-        </h2>
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%; margin-top:6px;">
-          <tr>
-            <td width="34" valign="top" style="width:34px; padding:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; font-weight:800; color:#FFE86D; border-top:1px solid #1E3A46;">01</td>
-            <td valign="top" style="padding:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.5; font-weight:600; color:#E3E3DE; border-top:1px solid #1E3A46;">Os mais de 15 mil flashcards prontos, elaborados e revisados por mais de 40 professores</td>
-          </tr>
-          <tr>
-            <td width="34" valign="top" style="width:34px; padding:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; font-weight:800; color:#FFE86D; border-top:1px solid #1E3A46;">02</td>
-            <td valign="top" style="padding:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.5; font-weight:600; color:#E3E3DE; border-top:1px solid #1E3A46;">Como a Revisão do Dia organiza o que revisar e quando</td>
-          </tr>
-          <tr>
-            <td width="34" valign="top" style="width:34px; padding:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; font-weight:800; color:#FFE86D; border-top:1px solid #1E3A46;">03</td>
-            <td valign="top" style="padding:14px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.5; font-weight:600; color:#E3E3DE; border-top:1px solid #1E3A46;">Como criar seus próprios flashcards</td>
-          </tr>
-          <tr>
-            <td width="34" valign="top" style="width:34px; padding:14px 0 14px 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; font-weight:800; color:#FFE86D; border-top:1px solid #1E3A46; border-bottom:1px solid #1E3A46;">04</td>
-            <td valign="top" style="padding:14px 0 14px 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.5; font-weight:600; color:#E3E3DE; border-top:1px solid #1E3A46; border-bottom:1px solid #1E3A46;">Como acompanhar seu desempenho, com espaço para tirar suas dúvidas ao vivo</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-    <tr>
-      <td class="sm-pad" style="padding:30px 36px 0 36px;">
-        <p style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; color:#A9B4B6;">
-          No dia, você também recebe um lembrete com o link por e-mail e no WhatsApp que cadastrou.
-          Se este e-mail tiver caído em promoções ou spam, mova para a caixa de entrada: assim os próximos chegam direto.
-        </p>
-        <p style="margin:20px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; color:#A9B4B6;">
-          Até lá!<br />
-          <strong style="color:#E3E3DE; font-weight:800;">Equipe Academy Cards</strong>
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td class="sm-pad" style="padding:30px 36px 40px 36px;">
+      <td bgcolor="#00273B" class="sm-pad" style="background-color:#00273B; padding:26px 26px 30px 26px;">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
           <tr>
-            <td style="padding-top:22px; border-top:1px solid #1E3A46;">
-              <p style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; line-height:1.6; color:#6E7D80;">
-                Você recebeu este e-mail porque se inscreveu no aulão gratuito de demonstração da Academy Cards.
-                Seus dados são usados para enviar o acesso ao aulão e comunicações relacionadas ao evento.
+            <!-- Canhoto -->
+            <td width="118" valign="middle" align="center" bgcolor="#FFE86D" class="sm-stub sm-block" style="width:118px; background-color:#FFE86D; border-radius:18px 0 0 18px; padding:22px 8px; border-right:2px dashed #001A27;">
+              <p class="sm-inl" style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:#AD5300;">Seg</p>
+              <p class="sm-day sm-inl" style="margin:2px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:54px; line-height:1; font-weight:800; letter-spacing:-0.03em; color:#001A27;">16</p>
+              <p class="sm-inl" style="margin:4px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:#001A27;">Nov</p>
+              <p class="sm-inl" style="margin:12px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:22px; line-height:1; font-weight:800; color:#001A27;">18h</p>
+            </td>
+            <!-- Corpo do ingresso -->
+            <td valign="top" bgcolor="#FFF8EB" class="sm-tpad sm-body sm-block" style="background-color:#FFF8EB; border-radius:0 18px 18px 0; padding:22px 24px;">
+              <p style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:#AD5300;">
+                Aulão gratuito · ao vivo
+              </p>
+              <p style="margin:6px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:20px; line-height:1.25; font-weight:800; letter-spacing:-0.01em; color:#001A27;">
+                Academy Cards na prática
+              </p>
+              <p style="margin:6px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:14px; line-height:1.55; color:#3D4A55;">
+                Segunda-feira, 16 de novembro, às 18h (horário de Brasília), no Google Meet
+              </p>
+
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;">
+                <tr>
+                  <td align="center" bgcolor="#3FBFFF" style="background-color:#3FBFFF; border-radius:12px;">
+                    <a href="https://meet.google.com/sud-uoww-fmu" target="_blank" style="display:block; padding:13px 22px; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; font-weight:800; color:#001A27; text-decoration:none; border-radius:12px;">
+                      Entrar na sala do aulão &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:12px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; line-height:1.6; color:#3D4A55;">
+                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Aul%C3%A3o%20gratuito%20Academy%20Cards&amp;dates=20261116T210000Z%2F20261116T223000Z&amp;details=Demonstra%C3%A7%C3%A3o%20gratuita%20do%20aplicativo%20Academy%20Cards.%20Sala%3A%20https%3A%2F%2Fmeet.google.com%2Fsud-uoww-fmu&amp;location=https%3A%2F%2Fmeet.google.com%2Fsud-uoww-fmu" target="_blank" style="color:#001A27; font-weight:800; text-decoration:underline;">+ Adicionar à minha agenda</a><br />
+                Sala: <a href="https://meet.google.com/sud-uoww-fmu" target="_blank" style="color:#AD5300; font-weight:700; text-decoration:underline; word-break:break-all;">meet.google.com/sud-uoww-fmu</a>
               </p>
             </td>
           </tr>
         </table>
+        <p style="margin:12px 4px 0 4px; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; line-height:1.5; color:#93DBFF; text-align:center;">
+          É a mesma sala no dia. Guarde este e-mail: ele é o seu ingresso.
+        </p>
+      </td>
+    </tr>
+
+    <!-- ================================================================
+         O QUE VOCÊ VAI VER (fundo claro, números em laranja)
+         ================================================================ -->
+    <tr>
+      <td bgcolor="#FBFBFB" class="sm-pad" style="background-color:#FBFBFB; padding:32px 34px 8px 34px;">
+        <p style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:#AD5300;">
+          No aulão
+        </p>
+        <h2 style="margin:6px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:22px; line-height:1.2; font-weight:800; letter-spacing:-0.015em; color:#001A27;">
+          O que você vai ver ao vivo
+        </h2>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%; margin-top:14px;">
+          <tr>
+            <td width="40" valign="top" style="width:40px; padding:12px 0 12px 0; border-top:1px solid #CFDBE3;">
+              <span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; border-radius:999px; background-color:#FFA858; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; font-weight:800; color:#001A27;">1</span>
+            </td>
+            <td valign="top" style="padding:12px 0; border-top:1px solid #CFDBE3; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.5; color:#001A27;">
+              <strong style="font-weight:800;">Mais de 15 mil flashcards prontos</strong><br />
+              <span style="color:#3D4A55;">Elaborados e revisados por mais de 40 professores.</span>
+            </td>
+          </tr>
+          <tr>
+            <td width="40" valign="top" style="width:40px; padding:12px 0; border-top:1px solid #CFDBE3;">
+              <span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; border-radius:999px; background-color:#FFA858; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; font-weight:800; color:#001A27;">2</span>
+            </td>
+            <td valign="top" style="padding:12px 0; border-top:1px solid #CFDBE3; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.5; color:#001A27;">
+              <strong style="font-weight:800;">A Revisão do Dia</strong><br />
+              <span style="color:#3D4A55;">Como o app decide o que você revisa e quando cada conteúdo volta.</span>
+            </td>
+          </tr>
+          <tr>
+            <td width="40" valign="top" style="width:40px; padding:12px 0; border-top:1px solid #CFDBE3;">
+              <span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; border-radius:999px; background-color:#FFA858; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; font-weight:800; color:#001A27;">3</span>
+            </td>
+            <td valign="top" style="padding:12px 0; border-top:1px solid #CFDBE3; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.5; color:#001A27;">
+              <strong style="font-weight:800;">Seus próprios flashcards</strong><br />
+              <span style="color:#3D4A55;">Como criar cards com o que você estuda, inclusive repertórios para a redação.</span>
+            </td>
+          </tr>
+          <tr>
+            <td width="40" valign="top" style="width:40px; padding:12px 0 14px 0; border-top:1px solid #CFDBE3; border-bottom:1px solid #CFDBE3;">
+              <span style="display:inline-block; width:28px; height:28px; line-height:28px; text-align:center; border-radius:999px; background-color:#FFA858; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:13px; font-weight:800; color:#001A27;">4</span>
+            </td>
+            <td valign="top" style="padding:12px 0 14px 0; border-top:1px solid #CFDBE3; border-bottom:1px solid #CFDBE3; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.5; color:#001A27;">
+              <strong style="font-weight:800;">Seu desempenho e suas dúvidas</strong><br />
+              <span style="color:#3D4A55;">Como acompanhar sua evolução, com espaço para perguntar o que quiser.</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ================================================================
+         LEMBRETE: o que acontece até o dia
+         ================================================================ -->
+    <tr>
+      <td bgcolor="#FBFBFB" class="sm-pad" style="background-color:#FBFBFB; padding:18px 34px 32px 34px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
+          <tr>
+            <td bgcolor="#E7F7FF" style="background-color:#E7F7FF; border-radius:16px; padding:16px 18px; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:14px; line-height:1.6; color:#001A27;">
+              <strong style="font-weight:800;">No dia 16, a gente te lembra.</strong> O link chega de novo por e-mail e no WhatsApp que você cadastrou. Se este e-mail caiu em promoções ou spam, mova para a caixa de entrada: assim os próximos chegam direto.
+            </td>
+          </tr>
+        </table>
+        <p style="margin:20px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.6; color:#3D4A55;">
+          Até segunda!<br />
+          <strong style="font-weight:800; color:#001A27;">Equipe Academy Cards</strong>
+        </p>
+      </td>
+    </tr>
+
+    <!-- ================================================================
+         RODAPÉ navy: redes, WhatsApp e aviso
+         Ícones brancos circulares do bucket público academy-cards-imagens-publicas
+         (os mesmos do e-mail de código de verificação). Não há ícone de WhatsApp
+         no bucket, então ele vai como link em texto, como no e-mail de referência.
+         ================================================================ -->
+    <tr>
+      <td bgcolor="#001A27" align="center" class="sm-pad" style="background-color:#001A27; border-radius:0 0 26px 26px; padding:30px 34px 32px 34px;">
+        <p style="margin:0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; font-weight:800; color:#F3FBFF;">
+          Siga a Academy Cards nas redes
+        </p>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:16px auto 0 auto;">
+          <tr>
+            <td align="center" width="33" valign="top" style="padding:0 11px;">
+              <a href="https://www.instagram.com/academy.cards" target="_blank"><img src="https://academy-cards-imagens-publicas.s3.us-east-1.amazonaws.com/redes/instagram_branco_circular.png" alt="Instagram" width="33" height="33" style="display:block; border:0; width:33px; height:33px;" /></a>
+            </td>
+            <td align="center" width="33" valign="top" style="padding:0 11px;">
+              <a href="https://www.tiktok.com/@academy.cards" target="_blank"><img src="https://academy-cards-imagens-publicas.s3.us-east-1.amazonaws.com/redes/tiktok_branco_circular.png" alt="TikTok" width="33" height="33" style="display:block; border:0; width:33px; height:33px;" /></a>
+            </td>
+            <td align="center" width="33" valign="top" style="padding:0 11px;">
+              <a href="https://lp.academycards.com.br/?utm_source=email&amp;utm_medium=transactional&amp;utm_campaign=aulao_demo_16_11" target="_blank"><img src="https://academy-cards-imagens-publicas.s3.us-east-1.amazonaws.com/redes/internet_branco_circular.png" alt="Site da Academy Cards" width="33" height="33" style="display:block; border:0; width:33px; height:33px;" /></a>
+            </td>
+          </tr>
+        </table>
+        <p style="margin:18px 0 0 0; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:14px; line-height:1.6; color:#BFD9E6;">
+          Ficou com alguma dúvida?
+          <a href="https://wa.me/5531999157582" target="_blank" style="color:#3FBFFF; font-weight:800; text-decoration:underline;">Fale com a gente no WhatsApp</a>
+        </p>
+        <p style="margin:20px 0 0 0; padding-top:18px; border-top:1px solid #1E3A46; font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; line-height:1.6; color:#7E8D90;">
+          Você recebeu este e-mail porque se inscreveu no aulão gratuito de demonstração da Academy Cards. Seus dados são usados para enviar o acesso ao aulão e comunicações relacionadas ao evento.<br />
+          © 2026 Academy Cards ·
+          <a href="http://academy-cards-termos.s3-website-us-east-1.amazonaws.com/aviso-privacidade.html" target="_blank" style="color:#93DBFF; text-decoration:underline;">Política de Privacidade</a>
+        </p>
       </td>
     </tr>
 
