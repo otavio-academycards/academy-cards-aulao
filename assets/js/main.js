@@ -65,11 +65,68 @@
     });
   }
 
-  function pushDataLayer(evento) {
+  function pushDataLayer(evento, extra) {
     try {
+      var dados = { event: evento, form_id: "formInscricao", form_location: "inscricao" };
+      if (extra) for (var k in extra) dados[k] = extra[k];
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: evento, form_id: "formInscricao", form_location: "inscricao" });
+      window.dataLayer.push(dados);
     } catch (err) { /* tracking nunca bloqueia o envio */ }
+  }
+
+  /* --- 0b. Lead pendente (Meta e GA4) ---------------------------------------
+     No envio aprovado, guardamos no sessionStorage o ID da submissão (o mesmo
+     que vai ao Zoho em COBJ2CF1) como event_id. A tag de Lead do GTM no
+     /obrigado só dispara se encontrar esse registro, e o apaga: visita direta,
+     link compartilhado ou recarregar não contam como Lead.
+     Correspondência avançada: e-mail, telefone e nome vão só como hash
+     SHA-256 (nunca em texto), lidos pela tag do pixel no /obrigado. Nada disso
+     entra no dataLayer.                                                      */
+
+  var LEAD_KEY = "aulao_lead_pending";
+
+  function salvarLeadPendente(dados) {
+    try { window.sessionStorage.setItem(LEAD_KEY, JSON.stringify(dados)); } catch (e) { /* sem storage */ }
+  }
+
+  function sha256Hex(texto) {
+    var bytes = new TextEncoder().encode(texto);
+    return window.crypto.subtle.digest("SHA-256", bytes).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+        return ("0" + b.toString(16)).slice(-2);
+      }).join("");
+    });
+  }
+
+  // Normalização pedida pelo Meta: minúsculas, sem espaços nem pontuação;
+  // telefone só com dígitos e código do país.
+  function normalizarNome(parte) {
+    return String(parte || "").toLowerCase().normalize("NFD")
+      .replace(/[̀-ͯ]/g, "").replace(/[^a-z]/g, "");
+  }
+
+  function hashesCorrespondencia(dados, emailTxt, telefoneE164, nomeTxt) {
+    try {
+      if (!window.crypto || !window.crypto.subtle || typeof TextEncoder !== "function") return;
+      var partes = String(nomeTxt || "").trim().split(/\s+/);
+      var campos = {
+        em: String(emailTxt || "").trim().toLowerCase(),
+        ph: String(telefoneE164 || "").replace(/\D/g, ""),
+        fn: normalizarNome(partes[0]),
+        ln: partes.length > 1 ? normalizarNome(partes[partes.length - 1]) : "",
+        country: "br"
+      };
+      var chaves = Object.keys(campos).filter(function (k) { return campos[k]; });
+      Promise.all(chaves.map(function (k) { return sha256Hex(campos[k]); })).then(function (hs) {
+        // Só completa o pendente desta submissão: se o /obrigado já o
+        // consumiu (ex.: volta pelo bfcache), não recria um Lead.
+        var atual = null;
+        try { atual = JSON.parse(window.sessionStorage.getItem(LEAD_KEY) || "null"); } catch (e) { /* sem storage */ }
+        if (!atual || atual.event_id !== dados.event_id) return;
+        chaves.forEach(function (k, i) { dados[k] = hs[i]; });
+        salvarLeadPendente(dados);
+      }).catch(function () { /* fica só o event_id */ });
+    } catch (e) { /* fica só o event_id */ }
   }
 
   /* --- 1. Atribuição -------------------------------------------------------
@@ -388,6 +445,15 @@
 
   fone.addEventListener("blur", function () { if (fone.value) validateFone(); });
 
+  // GTM: início de preenchimento, uma vez por carregamento, no primeiro
+  // input em um dos três campos visíveis (digitação ou autocomplete).
+  var formStartEnviado = false;
+  form.addEventListener("input", function (e) {
+    if (formStartEnviado || [nome, email, fone].indexOf(e.target) === -1) return;
+    formStartEnviado = true;
+    pushDataLayer("aulao_form_start", { first_field: e.target.id });
+  });
+
   /* --- 6. Campos gerados no envio (Conversões) -------------------------------
      Mesmo padrão da LP. Data/Hora_da_Conversao no formato do HTML gerado pelo
      Zoho: data DD/MM/YYYY + hora 01..12, minuto 00..59 e AM/PM, relógio de
@@ -553,11 +619,18 @@
       return;
     }
 
+    // Lead pendente: event_id já, gravado antes do POST; os hashes chegam
+    // em seguida (assíncronos, terminam bem antes do retorno do Zoho).
+    var eventId = document.getElementById("idExterno").value;
+    var lead = { event_id: eventId, ts: Date.now() };
+    salvarLeadPendente(lead);
+    hashesCorrespondencia(lead, email.value, phoneEl.value, nome.value);
+
     // GTM: submissão local válida. Nome próprio, não lp_form_submit: o
     // container é o da LP principal e as tags dela não devem disparar aqui.
     // Corre contra a navegação do POST nativo; a conversão confiável é o
-    // pageview de /obrigado. Sem dados pessoais no payload.
-    pushDataLayer("aulao_form_submit");
+    // Lead do /obrigado. Sem dados pessoais no payload (event_id é um UUID).
+    pushDataLayer("aulao_form_submit", { event_id: eventId });
 
     alertBox.textContent = "";
     enviando = true;

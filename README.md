@@ -185,9 +185,16 @@ da LP principal. Dois sinais de inscrição:
 
 | Sinal | Quando | Confiabilidade |
 |---|---|---|
-| `dataLayer` `aulao_form_submit` (`form_id`, `form_location`, sem dados pessoais) | submissão local válida, antes do POST ao Zoho | pode se perder: corre contra a navegação |
+| `dataLayer` `aulao_form_start` (`form_id`, `form_location`, `first_field`) | primeiro input em Nome, E-mail ou WhatsApp, 1x por carregamento | início de preenchimento |
+| `dataLayer` `aulao_form_submit` (`form_id`, `form_location`, `event_id`, sem dados pessoais) | submissão local válida, antes do POST ao Zoho | pode se perder: corre contra a navegação |
 | `dataLayer` `aulao_form_challenge_shown` / `aulao_form_challenge_confirmed` | checagem humana exibida / confirmada com clique real | diagnóstico do anti-bot, não é conversão |
-| Pageview de `/obrigado` | Zoho aceitou e redirecionou | conversão principal; recarregar conta de novo |
+| `sessionStorage` `aulao_lead_pending` (`event_id`, `ts` e os hashes SHA-256 `em`, `ph`, `fn`, `ln`, `country`) | gravado no envio aprovado | lido pelo GTM no `/obrigado` |
+| `dataLayer` `aulao_lead` (`event_id`), empurrado pela tag de Lead do GTM | `/obrigado` com Lead pendente na mesma aba (até 30 min) | conversão principal; recarregar ou visita direta não contam |
+
+O `event_id` é o ID da submissão (`COBJ2CF1` no Zoho). O Lead do Meta sai com
+esse `eventID`, o que permite deduplicar com a API de Conversões no futuro.
+A correspondência avançada usa só os hashes; o texto do formulário avisa que
+os dados servem, criptografados, para medir os anúncios.
 
 O nome é próprio de propósito: com `lp_form_submit`, as tags da LP principal
 disparariam aqui. No GTM, filtre os acionadores do Aulão por
